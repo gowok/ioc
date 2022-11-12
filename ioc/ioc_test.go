@@ -21,12 +21,13 @@ type testUserServive struct {
 func TestSet(t *testing.T) {
 	must := must.New(t)
 
-	Set(func() testUserRepository {
-		return testUserRepository{}
+	Set(func() *testUserRepository {
+		return &testUserRepository{}
 	})
 
-	singletonType := reflect.TypeOf(testUserRepository{})
+	singletonType := reflect.TypeOf(&testUserRepository{})
 	singletonObj, ok := container[singletonType.String()]
+
 	must.NotNil(singletonObj)
 	must.True(ok)
 }
@@ -34,9 +35,10 @@ func TestSet(t *testing.T) {
 func TestGet(t *testing.T) {
 	must := must.New(t)
 
-	singletonType := reflect.TypeOf(testUserRepository{})
-	container[singletonType.String()] = testUserRepository{}
+	singletonObj := testUserRepository{}
+	singletonType := reflect.TypeOf(&singletonObj)
+	container[singletonType.String()] = &singletonObj
 
-	singletonObj := Get(testUserRepository{})
-	must.NotNil(singletonObj)
+	singletonObjFromContainer := Get(singletonObj)
+	must.NotNil(singletonObjFromContainer)
 }
