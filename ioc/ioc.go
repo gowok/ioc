@@ -2,16 +2,15 @@ package ioc
 
 import (
 	"reflect"
+	"sync"
 )
 
-type IOC map[string]any
+var container *sync.Map = &sync.Map{}
 
-var container IOC = IOC{}
-
-func Set[T any](singletonFunc func() *T) {
+func Set[T any](singletonFunc func() T) {
 	singletonObj := singletonFunc()
-	singletonType := reflect.TypeOf(singletonObj)
-	container[singletonType.String()] = singletonObj
+	singletonType := reflect.TypeOf(&singletonObj)
+	container.Store(singletonType.String(), &singletonObj)
 }
 
 func Get[T any](in T) *T {
@@ -21,11 +20,15 @@ func Get[T any](in T) *T {
 	}()
 
 	singletonType := reflect.TypeOf(&in)
-	singletonObjAny := container[singletonType.String()]
-	singletonObj := singletonObjAny.(*T)
+	singletonObjAny, ok := container.Load(singletonType.String())
+	if !ok {
+		return nil
+	}
+
+	singletonObj, ok := singletonObjAny.(*T)
 	return singletonObj
 }
 
 func Reset() {
-	container = IOC{}
+	container = &sync.Map{}
 }
