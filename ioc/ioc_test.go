@@ -42,3 +42,16 @@ func TestGet(t *testing.T) {
 	singletonObjFromContainer := Get(singletonObj)
 	must.NotNil(singletonObjFromContainer)
 }
+
+func TestReset(t *testing.T) {
+	must := must.New(t)
+
+	Set(func() *testUserRepository {
+		return &testUserRepository{}
+	})
+
+	Reset()
+
+	singletonObj := Get(testUserRepository{})
+	must.Nil(singletonObj)
+}

@@ -25,3 +25,7 @@ func Get[T any](in T) *T {
 	singletonObj := singletonObjAny.(*T)
 	return singletonObj
 }
+
+func Reset() {
+	container = IOC{}
+}
