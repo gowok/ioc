@@ -8,14 +8,15 @@ import (
 )
 
 type testUserRepository struct {
+	count int
 }
 
 func (repo *testUserRepository) GetUsers() []string {
 	return []string{"Alex Under", "John Thor"}
 }
 
-type testUserServive struct {
-	userRepository testUserRepository
+type testUserService struct {
+	UserRepository *testUserRepository `ioc:"inject"`
 }
 
 func TestSet(t *testing.T) {
@@ -46,12 +47,29 @@ func TestGet(t *testing.T) {
 func TestReset(t *testing.T) {
 	must := must.New(t)
 
-	Set(func() *testUserRepository {
-		return &testUserRepository{}
+	Set(func() testUserRepository {
+		return testUserRepository{}
 	})
 
 	Reset()
 
 	singletonObj := Get(testUserRepository{})
 	must.Nil(singletonObj)
+}
+
+func TestInject(t *testing.T) {
+	must := must.New(t)
+
+	expected := 10
+	Set(func() testUserRepository {
+		return testUserRepository{expected}
+	})
+
+	service := testUserService{
+		UserRepository: &testUserRepository{},
+	}
+
+	Inject(service)
+
+	must.Equal(expected, service.UserRepository.count)
 }
