@@ -1,4 +1,4 @@
-module github.com/hadihammurabi/go-ioc
+module github.com/gowok/ioc
 
 go 1.19
 
