@@ -69,7 +69,7 @@ func TestInject(t *testing.T) {
 		UserRepository: &testUserRepository{},
 	}
 
-	Inject(service)
+	Resolve(service)
 
 	must.Equal(expected, service.UserRepository.count)
 }

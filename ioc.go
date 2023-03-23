@@ -34,7 +34,7 @@ func Reset() {
 	container = &sync.Map{}
 }
 
-func Inject[T any](obj T) T {
+func Resolve[T any](obj T) T {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Printf("ioc: %s\n", err)
