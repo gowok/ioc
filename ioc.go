@@ -1,6 +1,7 @@
 package ioc
 
 import (
+	"fmt"
 	"log"
 	"reflect"
 	"sync"
@@ -28,6 +29,16 @@ func Get[T any](in T) *T {
 
 	singletonObj, ok := singletonObjAny.(*T)
 	return singletonObj
+}
+
+func MustGet[T any](in T) *T {
+	res := Get(in)
+	if res == nil {
+		singletonType := reflect.TypeOf(&in)
+		panic(fmt.Sprintf("%s is nil", singletonType.String()))
+	}
+
+	return res
 }
 
 func Reset() {

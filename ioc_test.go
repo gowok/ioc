@@ -44,6 +44,18 @@ func TestGet(t *testing.T) {
 	must.NotNil(singletonObjFromContainer)
 }
 
+func TestMustGet(t *testing.T) {
+	must := must.New(t)
+
+	defer func() {
+		err := recover()
+		must.NotNil(err)
+	}()
+
+	singletonObj := struct{}{}
+	MustGet(singletonObj)
+}
+
 func TestReset(t *testing.T) {
 	must := must.New(t)
 
